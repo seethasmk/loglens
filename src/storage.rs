@@ -3,11 +3,13 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use chrono::DateTime;
 
 //writes one log entry to the file
 pub fn write_log(path: &str, entry: &LogEntry) -> std::io::Result<()>{
     let mut file = OpenOptions::new().create(true).append(true).open(path)?;
-    writeln!(file, "{} {} {} {}", entry.timestamp, entry.level, entry.source, entry.message)?;
+    let datetime = DateTime::from_timestamp(entry.timestamp as i64, 0).unwrap();
+    writeln!(file, "{} {} {} {}", datetime, entry.level, entry.source, entry.message)?;
     Ok(())
 }
 
